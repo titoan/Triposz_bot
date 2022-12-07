@@ -1,0 +1,30 @@
+{
+  "name": "triposz_bot",
+  "version": "1.0.0",
+  "description": "\"Бот служит для внесенния данных по расходам в xlsx документ расположенный на сервере.\"",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/titoan/Triposz_bot.git"
+  },
+  "author": "s_ryb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/titoan/Triposz_bot/issues"
+  },
+  "homepage": "https://github.com/titoan/Triposz_bot#readme",
+  "dependencies": {
+    "@grammyjs/files": "^1.0.4",
+    "@grammyjs/menu": "^1.1.2",
+    "dotenv": "^16.0.3",
+    "grammy": "^1.12.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
