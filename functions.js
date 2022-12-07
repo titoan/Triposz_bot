@@ -5,5 +5,5 @@ function getDate (){
 }
 
 module.exports = {
-    getDate
+    getDate    
 }
