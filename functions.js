@@ -15,6 +15,10 @@ function feeldToggle(brigade, name){
 function stateToggle(ctx, stateName){
     let states = ctx.session.state
     for(const currState in states){
+        if(states[currState]){
+            ctx.session.prevState = currState
+        }
+
         if(currState.toLowerCase() == stateName.toLowerCase()){
             states[currState] = true
         }else{
@@ -23,6 +27,7 @@ function stateToggle(ctx, stateName){
     }
 
     console.log(states)
+    console.log(`prevState = ${ctx.session.prevState}`)
 }
 
 module.exports = {

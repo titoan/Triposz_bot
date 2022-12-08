@@ -26,7 +26,8 @@ function initial() {
         currObject: '',
         currExpense: '',
         currName:'',
-        currSum: 0
+        currSum: 0,
+        prevState:''
     };
 }
 
@@ -55,7 +56,7 @@ bot.hears("Общее", ctx => {
 })
 
 bot.hears("Назад", ctx => {
-    if(ctx.session.state.getBrigades || ctx.session.state.getName){
+    if(ctx.session.state.getBrigades || ctx.session.state.getName || ctx.session.state.getObject){
         convers.startNewNote(ctx, getDate)
         stateToggle(ctx, "getSum")        
     }
@@ -76,29 +77,26 @@ bot.on('msg:text', ctx=>{
     let data = ctx.update.message.text
 
     if(ctx.session.state.getBrigades){
-
         ctx.session.currBrigade = data;
-        ctx.session.state.getBrigades = false;
-        ctx.reply(`Выберете объект`, {reply_markup:objectsList})
-        ctx.session.state.getObject = true;
-
+        convers.chooseObject(ctx, objectsList)
+        stateToggle(ctx, "getObject")
     }else if(ctx.session.state.getName){
         ctx.session.currName = data;
-        ctx.session.state.getName = false;
-        ctx.reply(`Выберете объект`, {reply_markup:objectsList})
-        ctx.session.state.getObject = true;
+        convers.chooseObject(ctx, objectsList)
+        stateToggle(ctx, "getObject")
     }else if(ctx.session.state.getObject){
-        ctx.session.currObject = data;
-        ctx.session.state.getObject = false;
-        ctx.reply(`Выберете расход`, {reply_markup:expenseList})
-        ctx.session.state.getExpense = true;
+        ctx.session.currObject = data;        
+        convers.chooseExpense(ctx, expenseList)
+        stateToggle(ctx, "getExpense")
     }else if(ctx.session.state.getExpense){
         ctx.session.currExpense = data;
+
         ctx.reply(`Сегодня ${getDate()}
 Сумма: ${ctx.session.currSum} ${feeldToggle(ctx.session.currBrigade, ctx.session.currName)}
 Объект: ${ctx.session.currObject}
 Расход: ${ctx.session.currExpense}
 `, {reply_markup:newNote})
+
 ctx.session.state.getExpense = false;
 ctx.session.currBrigade = '';
 ctx.session.currName = '';

@@ -17,6 +17,14 @@ class Conversation{
     chooseGeneral(ctx, objectsList){
         ctx.reply(`Выберете объект`, {reply_markup:objectsList})
     }
+
+    chooseObject(ctx, objectsList){
+        ctx.reply(`Выберете объект`, {reply_markup:objectsList})
+    }
+
+    chooseExpense(ctx, expenseList){
+        ctx.reply(`Выберете расход`, {reply_markup:expenseList})
+    }
 }
 
 module.exports = {
