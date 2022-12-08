@@ -1,6 +1,5 @@
 const { Keyboard, InlineKeyboard, Bot } = require("grammy");
 const { Menu, MenuRange } = require("@grammyjs/menu");
-const {brigades,people,objects} = require("./inform");
 const { text } = require("node:stream/consumers");
 
 
@@ -11,8 +10,6 @@ const category = new Keyboard()
 .text("Бригады").row()
 .text("Люди").row()
 .text("Общее")
-
-//! инлайн клавиатуры без range
 
 const brigadesList = new Keyboard()
 .text("Бригада Игоря")
@@ -66,31 +63,53 @@ const expenseList = new Keyboard()
 .row()
 .resized()
 
-// const brigadesList = new Menu('dynamic', {autoAnswer: false})
-// .dynamic((ctx, range)=>{
-//     for(const brigade of brigades){
-//         range
-//         .text(brigade, ctx => {
-//             ctx.session.currBrigade = brigade
-//             ctx.reply(`Бригады`, {reply_markup: objectsList})      
-//         }).row()
-//     }
-// })
-
-// const objectsList = new Menu('dynamic_2')
-// .dynamic((ctx, range)=>{
-//     for(const object of objects){
-//         range.text(object, ctx =>{
-//             ctx.session.currObject = object
-//         })
-//     }
-// })
-
+const peopleList = new Keyboard()
+.text("Андрей - керовник")
+.row()
+.text("Богдан")
+.row()
+.text("Владислав")
+.row()
+.text("Lelyuk Alexandr")
+.row()
+.text("Bayutsin Igor")
+.row()
+.text("Zyben Mikhail")
+.row()
+.text("Tarasiuk Oleksandr")
+.row()
+.text("Opaliukh Yurii")
+.row()
+.text("Statsenka Aliaksandr")
+.row()
+.text("Dranyk Oleksandr")
+.row()
+.text("Morhalenko Dmytro")
+.row()
+.text("Zorii Sviatoslav")
+.row()
+.text("Андрийко")
+.row()
+.text("подработка")
+.row()
+.text("Александра")
+.row()
+.text("Анастасия PM")
+.row()
+.text("Дима HR")
+.row()
+.text("Валерий")
+.row()
+.text("Tsishkou Dmitry")
+.row()
+.text("Koushyk Petr")
+.row()
 
 module.exports = {
     newNote,
     category,
     brigadesList,
     objectsList,
-    expenseList
+    expenseList,
+    peopleList
 }
