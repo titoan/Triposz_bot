@@ -1,12 +1,16 @@
 const {  Bot,  session,  InputFile} = require("grammy");
 const {  hydrateFiles} = require("@grammyjs/files");
-const {getDate, feeldToggle} = require("./functions")
+const {getDate, feeldToggle, stateToggle } = require("./functions")
 const {newNote, category, brigadesList, objectsList, expenseList, peopleList} = require("./keyabords")
+const {Conversation} = require("./conversation")
+
 require("dotenv").config();
 
 const token = process.env.BOT_TOKEN;
 const bot = new Bot(token);
 bot.api.config.use(hydrateFiles(token));
+
+const convers = new Conversation();
 
 
 function initial() {
@@ -33,22 +37,29 @@ bot.command("start", ctx => {
 })
 
 bot.hears("Новая запись", ctx => {
-    ctx.reply(`Сегодня ${getDate()}
-Введите сумму`, {reply_markup:{remove_keyboard:true}})
-ctx.session.state.getSum = true
+    convers.startNewNote(ctx, getDate)    
+    stateToggle(ctx, "getSum")
 })
 
 bot.hears("Бригады", ctx => {
-    ctx.reply(`Выберете бригаду`, { reply_markup: brigadesList}) // ? Клаваитура не исчезает
-    ctx.session.state.getBrigades = true;
+    convers.chooseBrigade(ctx, brigadesList)
+    stateToggle(ctx, "getBrigades")    
 })
 bot.hears("Люди", ctx => {
-    ctx.reply(`Выберете имя`, {reply_markup: peopleList})
-    ctx.session.state.getName = true;
+    convers.chooseName(ctx, peopleList)
+    stateToggle(ctx, "getName")    
 })
 bot.hears("Общее", ctx => {
-    ctx.reply(`Выберете объект`, {reply_markup:objectsList})
-    ctx.session.state.getObject = true;
+    convers.chooseGeneral(ctx)
+    stateToggle(ctx, "getObject")
+})
+
+bot.hears("Назад", ctx => {
+    if(ctx.session.state.getBrigades || ctx.session.state.getName){
+        convers.startNewNote(ctx, getDate)
+        stateToggle(ctx, "getSum")        
+    }
+    console.log(ctx.session.state)
 })
 
 bot.hears(/[0-9]/, ctx => {

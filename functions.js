@@ -12,7 +12,21 @@ function feeldToggle(brigade, name){
     }
 }
 
+function stateToggle(ctx, stateName){
+    let states = ctx.session.state
+    for(const currState in states){
+        if(currState.toLowerCase() == stateName.toLowerCase()){
+            states[currState] = true
+        }else{
+            states[currState] = false
+        }        
+    }
+
+    console.log(states)
+}
+
 module.exports = {
     getDate,
-    feeldToggle
+    feeldToggle,
+    stateToggle
 }

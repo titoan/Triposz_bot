@@ -22,6 +22,7 @@ const brigadesList = new Keyboard()
 .row()
 .text("Shartukh Anton i Aliaksandr")
 .row()
+.text("Назад")
 .resized()
 
 
@@ -104,6 +105,8 @@ const peopleList = new Keyboard()
 .row()
 .text("Koushyk Petr")
 .row()
+.text("Назад")
+.resized()
 
 module.exports = {
     newNote,
