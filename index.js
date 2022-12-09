@@ -33,7 +33,7 @@ const bot = new Bot(token);
 bot.api.config.use(hydrateFiles(token));
 
 const convers = new Conversation();
-const tableInfo = new TableInfo();
+let tableInfo;
 
 
 function initial() {
@@ -61,6 +61,7 @@ bot.use(session({
 }));
 
 bot.command("start", ctx => {
+  tableInfo = new TableInfo();
   ctx.reply(`Для начала нажмите "Новая запись"`, {
     reply_markup: newNote
   })

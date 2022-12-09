@@ -6,7 +6,10 @@ function TableInfo(){
 		this.worksheet = this.workbook.Sheets[this.sheetName]
 		this.jsonWorkSheet = XLSX.utils.sheet_to_json(this.worksheet);
 
-		this.writeToTable= (obj) => {			
+		this.writeToTable= (obj) => {		
+			
+			
+			obj["сумма"] = obj["сумма"].replace(/[.]/, ',')
 			this.jsonWorkSheet.push(obj)			
 			XLSX.utils.sheet_add_json(this.worksheet, this.jsonWorkSheet)
 			XLSX.writeFile(this.workbook, "data/data.xlsx");
