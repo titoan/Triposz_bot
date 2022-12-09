@@ -57,7 +57,6 @@ bot.use(session({
 }));
 
 bot.command("start", ctx => {
-
   tableInfo.testFunc()
 
   ctx.reply(`Для начала нажмите "Новая запись"`, {
@@ -144,6 +143,18 @@ bot.on('msg:text', ctx => {
 `, {
       reply_markup: newNote
     })
+
+    let currObj = {
+      'дата': `${getDate()}`,
+			'сумма': ctx.session.currSum,
+			'вид': ctx.session.currBrigade ? 'Бригада' : 'Люди',
+			'люди': ctx.session.currName ? ctx.session.currName : '',
+			'титул': ctx.session.currExpense,
+			'объект': ctx.session.currObject,
+			'бригады': ctx.session.currBrigade ? ctx.session.currBrigade : ''
+    }
+
+    tableInfo.writeToTable(currObj)
 
     ctx.session.state.getExpense = false;
     ctx.session.currBrigade = '';
