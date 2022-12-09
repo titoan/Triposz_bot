@@ -110,11 +110,17 @@ const peopleList = new Keyboard()
 .text("Назад")
 .resized()
 
+const writeRes = new Keyboard()
+.text("Записать результат")
+.row()
+.text("Назад")
+
 module.exports = {
     newNote,
     category,
     brigadesList,
     objectsList,
     expenseList,
-    peopleList
+    peopleList,
+    writeRes
 }

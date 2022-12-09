@@ -18,7 +18,8 @@ const {
   brigadesList,
   objectsList,
   expenseList,
-  peopleList
+  peopleList,
+  writeRes
 } = require("./keyabords")
 const {
   Conversation
@@ -42,14 +43,16 @@ function initial() {
       getBrigades: false,
       getObject: false,
       getExpense: false,
-      getName: false
+      getName: false,
+      writeRes:false
     },
     currBrigade: '',
     currObject: '',
     currExpense: '',
     currName: '',
     currSum: 0,
-    prevState: ''
+    prevState: '',
+    steps: []
   };
 }
 
@@ -58,20 +61,25 @@ bot.use(session({
 }));
 
 bot.command("start", ctx => {
-  tableInfo.testFunc()
-
   ctx.reply(`Для начала нажмите "Новая запись"`, {
     reply_markup: newNote
   })
-
+// ! Переместить текущие значения в отдельный объект сессии. Функция-обработчик => Обнуляет все значения сессии при сарте и новой записи (А надо ли?)
   ctx.session.currBrigade = '';
   ctx.session.currName = '';
   ctx.session.prevState = '';
 })
 
 bot.hears("Новая запись", ctx => {
+
   convers.startNewNote(ctx, getDate)
+
   stateToggle(ctx, "getSum")
+
+  ctx.session.steps = [];
+  ctx.session.prevState = '';
+  ctx.session.currBrigade = '';
+  ctx.session.currName = '';
 })
 
 bot.hears("Бригады", ctx => {
@@ -87,24 +95,87 @@ bot.hears("Общее", ctx => {
   stateToggle(ctx, "getObject")
 })
 
+bot.hears("Записать результат", ctx=>{
+  if(ctx.session.state.writeRes){
+
+    let currObj = {
+      'дата': `${getDate()}`,
+			'сумма': ctx.session.currSum,
+			'вид': `${viewFeeld(ctx)}`,
+			'люди': ctx.session.currName ? ctx.session.currName : '',
+			'титул': ctx.session.currExpense,
+			'объект': ctx.session.currObject,
+			'бригады': ctx.session.currBrigade ? ctx.session.currBrigade : ''
+    }
+    tableInfo.writeToTable(currObj)
+
+    ctx.session.state.getExpense = false;
+    ctx.session.currBrigade = '';
+    ctx.session.currName = '';
+    ctx.session.prevState = '';
+    ctx.session.steps = []
+
+    ctx.reply('Результат записан', {reply_markup: newNote})
+  }
+})
+
 bot.hears("Назад", ctx => {
   if (ctx.session.state.getBrigades || ctx.session.state.getName) {
-    convers.startNewNote(ctx, getDate)
+
+    convers.startNewNote(ctx, getDate)    
+
     stateToggle(ctx, "getSum")
+
+    ctx.session.steps = [];
+    ctx.session.prevState = '';
+    ctx.session.currBrigade = '';
+    ctx.session.currName = '';
   }
 
   if (ctx.session.state.getObject) {
-    if (ctx.session.prevState == "getName") {
+    if (ctx.session.prevState == "getName" || ctx.session.steps[1] == "getName") {
       convers.chooseName(ctx, peopleList)
       stateToggle(ctx, "getName")
-    } else if (ctx.session.prevState == "getBrigades") {
+    } else if (ctx.session.prevState == "getBrigades" || ctx.session.steps[1] == "getBrigades") {
       convers.chooseBrigade(ctx, brigadesList)
       stateToggle(ctx, "getBrigades")
     } else if (ctx.session.prevState == "getSum") {
+
       convers.startNewNote(ctx, getDate)
+
       stateToggle(ctx, "getSum")
+
+      ctx.session.steps = [];
+      ctx.session.prevState = '';
+      ctx.session.currBrigade = '';
+      ctx.session.currName = '';
     }
   }
+
+  if(ctx.session.state.getExpense){
+    if(ctx.session.prevState == "getObject" || ctx.session.prevState == "writeRes"){
+      stateToggle(ctx, "getObject")
+      convers.chooseObject(ctx, objectsList)
+    }
+    if(ctx.session.steps[1] == "getObject"){
+      convers.startNewNote(ctx, getDate)
+
+      stateToggle(ctx, "getSum")
+
+      ctx.session.steps = [];
+      ctx.session.prevState = '';
+      ctx.session.currBrigade = '';
+      ctx.session.currName = '';
+    }
+  }
+
+  if(ctx.session.state.writeRes){
+    if(ctx.session.prevState == "getExpense"){
+      stateToggle(ctx, "getExpense")
+      convers.chooseExpense(ctx, expenseList)
+    }
+  }
+
 })
 
 bot.hears(/[0-9]/, ctx => {
@@ -135,32 +206,16 @@ bot.on('msg:text', ctx => {
     convers.chooseExpense(ctx, expenseList)
     stateToggle(ctx, "getExpense")
   } else if (ctx.session.state.getExpense) {
-    ctx.session.currExpense = data;
+    ctx.session.currExpense = data; 
 
     ctx.reply(`Сегодня ${getDate()}
 Сумма: ${ctx.session.currSum} ${feeldToggle(ctx.session.currBrigade, ctx.session.currName)}
 Объект: ${ctx.session.currObject}
 Расход: ${ctx.session.currExpense}
 `, {
-      reply_markup: newNote
+      reply_markup: writeRes
     })
-
-    let currObj = {
-      'дата': `${getDate()}`,
-			'сумма': ctx.session.currSum,
-			'вид': `${viewFeeld(ctx)}`,
-			'люди': ctx.session.currName ? ctx.session.currName : '',
-			'титул': ctx.session.currExpense,
-			'объект': ctx.session.currObject,
-			'бригады': ctx.session.currBrigade ? ctx.session.currBrigade : ''
-    }
-
-    tableInfo.writeToTable(currObj)
-
-    ctx.session.state.getExpense = false;
-    ctx.session.currBrigade = '';
-    ctx.session.currName = '';
-    ctx.session.prevState = '';
+    stateToggle(ctx, "writeRes")
   }
 })
 

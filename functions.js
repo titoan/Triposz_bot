@@ -16,7 +16,8 @@ function stateToggle(ctx, stateName){
     let states = ctx.session.state
     for(const currState in states){
         if(states[currState]){
-            ctx.session.prevState = currState
+            ctx.session.prevState = currState;
+            ctx.session.steps.push(currState)
         }
 
         if(currState.toLowerCase() == stateName.toLowerCase()){
@@ -24,7 +25,9 @@ function stateToggle(ctx, stateName){
         }else{
             states[currState] = false
         }        
-    }    
+    }
+    console.log(ctx.session.prevState)
+    console.log(ctx.session.steps)    
 }
 
 function viewFeeld(ctx){
