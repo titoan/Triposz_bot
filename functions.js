@@ -30,8 +30,16 @@ function stateToggle(ctx, stateName){
     console.log(`prevState = ${ctx.session.prevState}`)
 }
 
+function viewFeeld(ctx){
+    if(!ctx.session.currBrigade && !ctx.session.currName){
+        return 'Общее'
+    }
+    return ctx.session.currBrigade ? 'Бригада' : 'Люди'
+}
+
 module.exports = {
     getDate,
     feeldToggle,
-    stateToggle
+    stateToggle,
+    viewFeeld
 }
