@@ -24,10 +24,7 @@ function stateToggle(ctx, stateName){
         }else{
             states[currState] = false
         }        
-    }
-
-    console.log(states)
-    console.log(`prevState = ${ctx.session.prevState}`)
+    }    
 }
 
 function viewFeeld(ctx){

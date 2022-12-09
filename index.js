@@ -148,7 +148,7 @@ bot.on('msg:text', ctx => {
     let currObj = {
       'дата': `${getDate()}`,
 			'сумма': ctx.session.currSum,
-			'вид': `${viewFeeld(ctx)}`, //! написать функцию. Обрабатывать случай когда нет имени и бригады
+			'вид': `${viewFeeld(ctx)}`,
 			'люди': ctx.session.currName ? ctx.session.currName : '',
 			'титул': ctx.session.currExpense,
 			'объект': ctx.session.currObject,
