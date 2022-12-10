@@ -4,7 +4,13 @@ const { text } = require("node:stream/consumers");
 
 
 const newNote = new Keyboard()
-.text("Новая запись").resized()
+.text("Новая запись")
+.resized()
+
+const adminMenu = new Keyboard()
+.text("Новая запись")
+.row()
+.text("Получить таблицу")
 
 const category = new Keyboard()
 .text("Бригады").row()
@@ -122,5 +128,6 @@ module.exports = {
     objectsList,
     expenseList,
     peopleList,
-    writeRes
+    writeRes,
+    adminMenu
 }

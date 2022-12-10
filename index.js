@@ -10,7 +10,8 @@ const {
   getDate,
   feeldToggle,
   stateToggle,
-  viewFeeld
+  viewFeeld,
+  isADmin
 } = require("./functions")
 const {
   newNote,
@@ -19,7 +20,8 @@ const {
   objectsList,
   expenseList,
   peopleList,
-  writeRes
+  writeRes,
+  adminMenu
 } = require("./keyabords")
 const {
   Conversation
@@ -62,9 +64,8 @@ bot.use(session({
 
 bot.command("start", ctx => {
   tableInfo = new TableInfo();
-  ctx.reply(`Для начала нажмите "Новая запись"`, {
-    reply_markup: newNote
-  })
+  isADmin(ctx, newNote, adminMenu)
+
 // ! Переместить текущие значения в отдельный объект сессии. Функция-обработчик => Обнуляет все значения сессии при сарте и новой записи (А надо ли?)
   ctx.session.currBrigade = '';
   ctx.session.currName = '';
@@ -108,15 +109,18 @@ bot.hears("Записать результат", ctx=>{
 			'объект': ctx.session.currObject,
 			'бригады': ctx.session.currBrigade ? ctx.session.currBrigade : ''
     }
-    tableInfo.writeToTable(currObj)
 
+    tableInfo.writeToTable(currObj)   
     ctx.session.state.getExpense = false;
+
     ctx.session.currBrigade = '';
     ctx.session.currName = '';
     ctx.session.prevState = '';
     ctx.session.steps = []
 
-    ctx.reply('Результат записан', {reply_markup: newNote})
+    // ctx.reply('Результат записан', {reply_markup: newNote})
+    ctx.reply('Результат записан')
+    isADmin(ctx, newNote, adminMenu)
   }
 })
 
@@ -178,6 +182,16 @@ bot.hears("Назад", ctx => {
   }
 
 })
+
+bot.hears("Получить таблицу", async ctx =>{
+  try {
+    await ctx.replyWithDocument(new InputFile("./data/data.xlsx"));
+  } catch (err) {
+    ctx.reply(`${err.description}`);    
+  }
+})
+
+
 
 bot.hears(/[0-9]/, ctx => {
   if (ctx.session.state.getSum) {

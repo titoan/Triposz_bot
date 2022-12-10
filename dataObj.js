@@ -1,19 +1,22 @@
 const XLSX = require("xlsx");
 
-function TableInfo(){
+function TableInfo() {
 	this.workbook = XLSX.readFile("data/data.xlsx");
-		this.sheetName = this.workbook.SheetNames[0]
-		this.worksheet = this.workbook.Sheets[this.sheetName]
-		this.jsonWorkSheet = XLSX.utils.sheet_to_json(this.worksheet);
+	this.sheetName = this.workbook.SheetNames[0]
+	this.worksheet = this.workbook.Sheets[this.sheetName]
+	this.jsonWorkSheet = XLSX.utils.sheet_to_json(this.worksheet);
 
-		this.writeToTable= (obj) => {		
-			
-			
-			obj["сумма"] = obj["сумма"].replace(/[.]/, ',')
-			this.jsonWorkSheet.push(obj)			
-			XLSX.utils.sheet_add_json(this.worksheet, this.jsonWorkSheet)
-			XLSX.writeFile(this.workbook, "data/data.xlsx");
-		}
+	this.writeToTable = async (obj) => {
+// ? Ещё раз инициализируем json массив с даннвми из таблицы. Чтобы подтягивать последние изменения
+this.jsonWorkSheet = XLSX.utils.sheet_to_json(this.worksheet);
+
+		obj["сумма"] = await obj["сумма"].replace(/[.]/, ',');
+
+		await this.jsonWorkSheet.push(obj);
+
+		await XLSX.utils.sheet_add_json(this.worksheet, this.jsonWorkSheet);
+		await XLSX.writeFile(this.workbook, "data/data.xlsx");
+	}
 }
 
 module.exports = {
