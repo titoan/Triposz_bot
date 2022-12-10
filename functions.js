@@ -38,7 +38,7 @@ function viewFeeld(ctx) {
 }
 
 function isADmin(ctx, newNote, adminMenu) {
-    if (ctx.update.message.from.id == 192713235) {
+    if (ctx.update.message.from.id == (192713235 || 528929839) ) {
         ctx.reply(`Для начала нажмите "Новая запись"`, {
             reply_markup: adminMenu
         })

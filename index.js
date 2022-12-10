@@ -101,13 +101,13 @@ bot.hears("Записать результат", ctx=>{
   if(ctx.session.state.writeRes){
 
     let currObj = {
-      'дата': `${getDate()}`,
-			'сумма': ctx.session.currSum,
-			'вид': `${viewFeeld(ctx)}`,
-			'люди': ctx.session.currName ? ctx.session.currName : '',
-			'титул': ctx.session.currExpense,
-			'объект': ctx.session.currObject,
-			'бригады': ctx.session.currBrigade ? ctx.session.currBrigade : ''
+      'Дата': `${getDate()}`,
+			'Сумма': ctx.session.currSum,
+			'Вид': `${viewFeeld(ctx)}`,
+			'Люди': ctx.session.currName ? ctx.session.currName : '',
+			'Титул': ctx.session.currExpense,
+			'Объект': ctx.session.currObject,
+			'Бригады': ctx.session.currBrigade ? ctx.session.currBrigade : ''
     }
 
     tableInfo.writeToTable(currObj)   
