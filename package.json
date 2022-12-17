@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/titoan/Triposz_bot#readme",
   "dependencies": {
+    "@grammyjs/conversations": "^1.1.0",
     "@grammyjs/files": "^1.0.4",
     "@grammyjs/menu": "^1.1.2",
     "dotenv": "^16.0.3",
