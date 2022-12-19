@@ -16,14 +16,14 @@ this.jsonWorkSheet = XLSX.utils.sheet_to_json(this.worksheet);
 
 		await this.jsonWorkSheet.push(obj);
 
-		await console.log(this.jsonWorkSheet)
+		// await console.log(this.jsonWorkSheet)
 		await XLSX.utils.sheet_add_json(this.worksheet, this.jsonWorkSheet);
 
 		await XLSX.utils.sheet_add_aoa(this.worksheet, [["Дата", "Сумма", "Вид","Люди","Титул","Объект","Бригады"]], { origin: "A1" })
 
 		this.worksheet["!cols"] = await [ { wch: 15 },{ wch: 15 },{ wch: 15 },{ wch: 20 },{ wch: 20 },{ wch: 15 },{ wch: 25 } ]; 
 
-		await XLSX.writeFile(this.workbook, "data/data.xlsx");
+		await XLSX.writeFile(this.workbook, "./data/data.xlsx");
 	}
 }
 

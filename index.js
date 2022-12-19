@@ -6,12 +6,14 @@ const {
 const {
   hydrateFiles
 } = require("@grammyjs/files");
+const fs = require("fs")
 const {
   getDate,
   feeldToggle,
   stateToggle,
   viewFeeld,
-  isADmin
+  isADmin,
+  sendMsgToAdmin
 } = require("./functions")
 const {
   newNote,
@@ -35,7 +37,7 @@ const bot = new Bot(token);
 bot.api.config.use(hydrateFiles(token));
 
 const convers = new Conversation();
-let tableInfo;
+let tableInfo = new TableInfo();
 
 
 function initial() {
@@ -46,7 +48,8 @@ function initial() {
       getObject: false,
       getExpense: false,
       getName: false,
-      writeRes:false
+      writeRes:false,
+      stop: false
     },
     currBrigade: '',
     currObject: '',
@@ -54,17 +57,17 @@ function initial() {
     currName: '',
     currSum: 0,
     prevState: '',
-    steps: []
+    steps: [],
+    currData: []
   };
 }
 
-bot.use(session({
-  initial
-}));
+bot.use(session({initial}));
 
 bot.command("start", ctx => {
   tableInfo = new TableInfo();
-  isADmin(ctx, newNote, adminMenu)
+  // console.log(tableInfo)
+  isADmin(ctx, newNote, adminMenu, fs)
 
 // ! Переместить текущие значения в отдельный объект сессии. Функция-обработчик => Обнуляет все значения сессии при сарте и новой записи (А надо ли?)
   ctx.session.currBrigade = '';
@@ -83,7 +86,6 @@ bot.hears("Новая запись", ctx => {
   ctx.session.currBrigade = '';
   ctx.session.currName = '';
 })
-
 bot.hears("Бригады", ctx => {
   convers.chooseBrigade(ctx, brigadesList)
   stateToggle(ctx, "getBrigades")
@@ -96,7 +98,6 @@ bot.hears("Общее", ctx => {
   convers.chooseGeneral(ctx, objectsList)
   stateToggle(ctx, "getObject")
 })
-
 bot.hears("Записать результат", ctx=>{
   if(ctx.session.state.writeRes){
 
@@ -109,21 +110,20 @@ bot.hears("Записать результат", ctx=>{
 			'Объект': ctx.session.currObject,
 			'Бригады': ctx.session.currBrigade ? ctx.session.currBrigade : ''
     }
+    // console.log(tableInfo)
+    tableInfo.writeToTable(currObj);
 
-    tableInfo.writeToTable(currObj)   
-    ctx.session.state.getExpense = false;
+    ctx.session.state.getExpense =  false;
+    ctx.session.currBrigade =  '';
+    ctx.session.currName =  '';
+    ctx.session.prevState =  '';
+    ctx.session.steps =  [];
 
-    ctx.session.currBrigade = '';
-    ctx.session.currName = '';
-    ctx.session.prevState = '';
-    ctx.session.steps = []
-
-    // ctx.reply('Результат записан', {reply_markup: newNote})
-    ctx.reply('Результат записан')
-    isADmin(ctx, newNote, adminMenu)
+     ctx.reply('Результат записан');    
+     sendMsgToAdmin(bot,ctx)
+     isADmin(ctx, newNote, adminMenu, fs);
   }
 })
-
 bot.hears("Назад", ctx => {
   if (ctx.session.state.getBrigades || ctx.session.state.getName) {
 
@@ -182,7 +182,17 @@ bot.hears("Назад", ctx => {
   }
 
 })
-
+bot.hears("Стоп", ctx => {
+  stateToggle(ctx, "stop")
+  if(ctx.session.state.stop){
+    tableInfo = new TableInfo();
+    isADmin(ctx, newNote, adminMenu, fs)
+    ctx.session.steps = [];
+    ctx.session.prevState = '';
+    ctx.session.currBrigade = '';
+    ctx.session.currName = '';
+  }
+})
 bot.hears("Получить таблицу", async ctx =>{
   try {
     await ctx.replyWithDocument(new InputFile("./data/data.xlsx"));
@@ -190,9 +200,11 @@ bot.hears("Получить таблицу", async ctx =>{
     ctx.reply(`${err.description}`);    
   }
 })
-
-
-
+bot.hears("Свой вариант", async ctx => {
+  if (ctx.session.state.getExpense){
+    await ctx.reply("Введите название материала:", {reply_markup:{remove_keyboard:true}})
+  }
+})
 bot.hears(/[0-9]/, ctx => {
   if (ctx.session.state.getSum) {
     ctx.session.currSum = ctx.update.message.text
@@ -204,7 +216,6 @@ bot.hears(/[0-9]/, ctx => {
     })
   }
 })
-
 bot.on('msg:text', ctx => {
   let data = ctx.update.message.text
 

@@ -1,7 +1,4 @@
 const { Keyboard, InlineKeyboard, Bot } = require("grammy");
-const { Menu, MenuRange } = require("@grammyjs/menu");
-const { text } = require("node:stream/consumers");
-
 
 const newNote = new Keyboard()
 .text("Новая запись")
@@ -16,6 +13,8 @@ const category = new Keyboard()
 .text("Бригады").row()
 .text("Люди").row()
 .text("Общее")
+.row()
+.text("Стоп")
 
 const brigadesList = new Keyboard()
 .text("Бригада Игоря")
@@ -29,8 +28,9 @@ const brigadesList = new Keyboard()
 .text("Shartukh Anton i Aliaksandr")
 .row()
 .text("Назад")
+.row()
+.text("Стоп")
 .resized()
-
 
 const objectsList = new Keyboard()
 .text("GIPS Karpacz")
@@ -46,6 +46,8 @@ const objectsList = new Keyboard()
 .text("Office")
 .row()
 .text("Назад")
+.row()
+.text("Стоп")
 .resized()
 
 const expenseList = new Keyboard()
@@ -69,7 +71,11 @@ const expenseList = new Keyboard()
 .row()
 .text("Ксеро")
 .row()
+.text("Свой вариант")
+.row()
 .text("Назад")
+.row()
+.text("Стоп")
 .resized()
 
 const peopleList = new Keyboard()
@@ -114,12 +120,16 @@ const peopleList = new Keyboard()
 .text("Koushyk Petr")
 .row()
 .text("Назад")
+.row()
+.text("Стоп")
 .resized()
 
 const writeRes = new Keyboard()
 .text("Записать результат")
 .row()
 .text("Назад")
+.row()
+.text("Стоп")
 
 module.exports = {
     newNote,
