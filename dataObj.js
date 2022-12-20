@@ -19,7 +19,7 @@ this.jsonWorkSheet = XLSX.utils.sheet_to_json(this.worksheet);
 		// await console.log(this.jsonWorkSheet)
 		await XLSX.utils.sheet_add_json(this.worksheet, this.jsonWorkSheet);
 
-		await XLSX.utils.sheet_add_aoa(this.worksheet, [["Дата", "Сумма", "Вид","Люди","Титул","Объект","Бригады"]], { origin: "A1" })
+		await XLSX.utils.sheet_add_aoa(this.worksheet, [["Дата", "Сумма", "Вид","Люди","Титул","Объект","Бригады","ФИО"]], { origin: "A1" })
 
 		this.worksheet["!cols"] = await [ { wch: 15 },{ wch: 15 },{ wch: 15 },{ wch: 20 },{ wch: 20 },{ wch: 15 },{ wch: 25 } ]; 
 

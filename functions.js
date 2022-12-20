@@ -1,7 +1,7 @@
 function getDate() {
     const date = new Date();
 
-    return `${date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()}.${date.getMonth()}.${date.getFullYear()}`
+    return `${date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
 }
 
 function feeldToggle(brigade, name) {
@@ -61,7 +61,8 @@ async function isADmin(ctx, newNote, adminMenu, fs) {
         })
     })
 
-    let a = [262506374, 528929839, 192713235]
+    // 192713235
+    let a = [262506374]
     let adminId = a.find(item => item == ctx.update.message.from.id) ? a.find(item => item == ctx.update.message.from.id) : false
     console.log(adminId)
     if (adminId) {
@@ -76,13 +77,42 @@ async function isADmin(ctx, newNote, adminMenu, fs) {
 
 }
 
-async function sendMsgToAdmin(bot, ctx) {
-    await bot.api.sendMessage(192713235, `Пользователь совершил запись:
+async function sendMsgToAdmin(bot, ctx, currObj) {
+    let arr = [288945494, 262506374,126981981]
 
+    arr.forEach(async item => {
+        await bot.api.sendMessage(item, `Пользователь совершил запись:
+
+<b>${currObj['Дата']}</b>
+Сумма: ${currObj['Сумма']}
+Вид: ${currObj['Вид']}
+Люди: ${currObj['Люди']}
+Титул: ${currObj['Титул']}
+Объект: ${currObj['Объект']}
+Бригады: ${currObj['Бригады']}
+Комментарий: ${currObj['Комментарий']}
+        
 Имя: <b>${ctx.message.from.last_name == undefined ? '': ctx.message.from.last_name} ${ctx.message.from.first_name == undefined ? '' : ctx.message.from.first_name}</b>
 username: <b>${ctx.message.from.username}</b>`, {
-        parse_mode: "HTML"
-    });
+            parse_mode: "HTML"
+        });
+    })
+
+// await bot.api.sendMessage(192713235, `Пользователь совершил запись:
+
+// <b>${currObj['Дата']}</b>
+// Сумма: ${currObj['Сумма']}
+// Вид: ${currObj['Вид']}
+// Люди: ${currObj['Люди']}
+// Титул: ${currObj['Титул']}
+// Объект: ${currObj['Объект']}
+// Бригады: ${currObj['Бригады']}
+// Комментарий: ${currObj['Комментарий']}
+
+// Имя: <b>${ctx.message.from.last_name == undefined ? '': ctx.message.from.last_name} ${ctx.message.from.first_name == undefined ? '' : ctx.message.from.first_name}</b>
+// username: <b>${ctx.message.from.username}</b>`, {
+//             parse_mode: "HTML"
+//         });
 }
 
 module.exports = {
