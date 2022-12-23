@@ -45,7 +45,7 @@ class Conversation {
 Сумма: ${ctx.session.currSum} ${feeldToggle(ctx.session.currBrigade, ctx.session.currName)}
 Объект: ${ctx.session.currObject}
 Расход: ${ctx.session.currExpense}
-${ctx.session.state.writeRes ? `Комментарий: ${ctx.session.currComment}` : ''}
+щіш	${ctx.session.currComment ? `Комментарий: ${ctx.session.currComment}` : ''}
     `, {
 			reply_markup: writeRes
 		})
