@@ -30,3 +30,16 @@ this.jsonWorkSheet = XLSX.utils.sheet_to_json(this.worksheet);
 module.exports = {
 	TableInfo
 }
+
+
+
+// currValues:{
+// 	currBrigade: '',
+// 	currObject: '',
+// 	currExpense: '',
+// 	currName: '',
+// 	currSum: 0,
+// 	currComment: '',
+// 	prevState: '',
+	
+//   }    

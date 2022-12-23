@@ -13,7 +13,7 @@ const {
   stateToggle,
   viewFeeld,
   isADmin,
-  sendMsgToAdmin
+  sendMsgToAdmin, 
 } = require("./functions")
 const {
   newNote,
@@ -50,16 +50,9 @@ function initial() {
       getName: false,
       writeRes:false,
       stop: false
-    },
-    currBrigade: '',
-    currObject: '',
-    currExpense: '',
-    currName: '',
-    currSum: 0,
-    currComment: '',
-    prevState: '',
-    steps: [],
-    currData: []
+    },        
+      steps: [],
+      currData: []
   };
 }
 
@@ -74,6 +67,7 @@ bot.command("start", ctx => {
   ctx.session.currBrigade = '';
   ctx.session.currName = '';
   ctx.session.prevState = '';
+  ctx.session.currComment = '';
 })
 
 bot.hears("Новая запись", ctx => {
@@ -81,11 +75,13 @@ bot.hears("Новая запись", ctx => {
   convers.startNewNote(ctx, getDate)
 
   stateToggle(ctx, "getSum")
-
-  ctx.session.steps = [];
-  ctx.session.prevState = '';
-  ctx.session.currBrigade = '';
-  ctx.session.currName = '';
+  console.log(ctx.session)
+  clearCurrValues(ctx.session.currValues)  
+  // ctx.session.steps = [];
+  // ctx.session.prevState = '';
+  // ctx.session.currBrigade = '';
+  // ctx.session.currName = '';
+  // ctx.session.currComment = '';
 })
 bot.hears("Бригады", ctx => {
   convers.chooseBrigade(ctx, brigadesList)
@@ -99,7 +95,7 @@ bot.hears("Общее", ctx => {
   convers.chooseGeneral(ctx, objectsList)
   stateToggle(ctx, "getObject")
 })
-bot.hears("Записать результат", ctx=>{
+bot.hears("Записать результат", async ctx=>{
   if(ctx.session.state.writeRes){
 
     let currObj = {
@@ -114,18 +110,20 @@ bot.hears("Записать результат", ctx=>{
       'Комментарий': ctx.session.currComment
 
     }
-    // console.log(tableInfo)
+    
     tableInfo.writeToTable(currObj);
 
     ctx.session.state.getExpense =  false;
+    // ! СЮДА clearCurrValues()
     ctx.session.currBrigade =  '';
     ctx.session.currName =  '';
     ctx.session.prevState =  '';
+    ctx.session.currComment ='';
     ctx.session.steps =  [];
 
-    ctx.reply('Результат записан');    
-    sendMsgToAdmin(bot,ctx, currObj)
-    isADmin(ctx, newNote, adminMenu, fs);
+    await ctx.reply('Результат записан');    
+    await sendMsgToAdmin(bot,ctx, currObj)
+    await isADmin(ctx, newNote, adminMenu, fs);
   }
 })
 bot.hears("Назад", ctx => {
@@ -204,12 +202,14 @@ bot.hears("Получить таблицу", async ctx =>{
     ctx.reply(`${err.description}`);    
   }
 })
-bot.hears("Свой вариант", async ctx => {
+bot.hears("Свой вариант", async ctx => {  
   if (ctx.session.state.getExpense){
-    await ctx.reply("Выберите типа расхода:", {reply_markup:{remove_keyboard:true}})
+    await ctx.reply("Введите типа расхода:", {reply_markup:{remove_keyboard:true}})
   }
 })
+
 bot.hears(/[0-9]/, ctx => {
+  data = ctx.message.text
   if (ctx.session.state.getSum) {
     ctx.session.currSum = ctx.update.message.text
     ctx.reply(`Сегодня ${getDate()}
@@ -219,17 +219,28 @@ bot.hears(/[0-9]/, ctx => {
       reply_markup: category
     })
   }
+  if (ctx.session.state.getExpense){
+    ctx.session.currExpense = data;
+    convers.getTotalRes(ctx, getDate, feeldToggle, writeRes)
+    stateToggle(ctx, "writeRes")
+  }
+  if (ctx.session.state.writeRes){
+    ctx.session.currComment = data
+    convers.getTotalRes(ctx, getDate, feeldToggle, writeRes)
+  }
 })
 bot.hears("Оставить комментарий", async ctx => {
   if (ctx.session.state.writeRes){
     await ctx.reply("Напишите ваш комментарий:", {reply_markup:{remove_keyboard:true}})
   }
 })
-bot.on('msg:text', ctx => {  
+bot.on('message', ctx => {  
   let data = ctx.update.message.text
 
   if (ctx.session.state.getBrigades) {
     ctx.session.currBrigade = data;
+    console.log(ctx.session)
+    
     convers.chooseObject(ctx, objectsList)
     stateToggle(ctx, "getObject")
   } else if (ctx.session.state.getName) {
@@ -241,26 +252,14 @@ bot.on('msg:text', ctx => {
     convers.chooseExpense(ctx, expenseList)
     stateToggle(ctx, "getExpense")
   } else if (ctx.session.state.getExpense) {
-    ctx.session.currExpense = data; 
 
-    ctx.reply(`Сегодня ${getDate()}
-Сумма: ${ctx.session.currSum} ${feeldToggle(ctx.session.currBrigade, ctx.session.currName)}
-Объект: ${ctx.session.currObject}
-Расход: ${ctx.session.currExpense}
-`, {
-      reply_markup: writeRes
-    })
+    ctx.session.currExpense = data;    
+    convers.getTotalRes(ctx, getDate, feeldToggle, writeRes)
     stateToggle(ctx, "writeRes")
   }else if (ctx.session.state.writeRes){
+
     ctx.session.currComment = data
-    ctx.reply(`Сегодня ${getDate()}
-Сумма: ${ctx.session.currSum} ${feeldToggle(ctx.session.currBrigade, ctx.session.currName)}
-Объект: ${ctx.session.currObject}
-Расход: ${ctx.session.currExpense}
-Комментарий: ${ctx.session.currComment}
-    `, {
-          reply_markup: writeRes
-        })
+    convers.getTotalRes(ctx, getDate, feeldToggle, writeRes)
   }
 })
 

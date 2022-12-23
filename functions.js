@@ -115,11 +115,21 @@ username: <b>${ctx.message.from.username}</b>`, {
 //         });
 }
 
+// function clearCurrValues(currValues){
+//     for(key in currValues){
+//         if(Array.isArray(currValues[key])){
+//             currValues[key] = [];
+//         }else{
+//             currValues[key] = '';
+//         }
+//     }
+// }
+
 module.exports = {
     getDate,
     feeldToggle,
     stateToggle,
     viewFeeld,
     isADmin,
-    sendMsgToAdmin
+    sendMsgToAdmin,    
 }
