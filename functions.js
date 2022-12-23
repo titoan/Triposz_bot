@@ -25,9 +25,7 @@ function stateToggle(ctx = {}, stateName = '') {
         } else {
             states[currState] = false
         }
-    }
-    // console.log(ctx.session.prevState)
-    // console.log(ctx.session.steps)
+    }   
 }
 
 function viewFeeld(ctx) {
@@ -114,16 +112,6 @@ username: <b>${ctx.message.from.username}</b>`, {
 //             parse_mode: "HTML"
 //         });
 }
-
-// function clearCurrValues(currValues){
-//     for(key in currValues){
-//         if(Array.isArray(currValues[key])){
-//             currValues[key] = [];
-//         }else{
-//             currValues[key] = '';
-//         }
-//     }
-// }
 
 module.exports = {
     getDate,

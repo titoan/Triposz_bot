@@ -75,13 +75,6 @@ bot.hears("Новая запись", ctx => {
   convers.startNewNote(ctx, getDate)
 
   stateToggle(ctx, "getSum")
-  console.log(ctx.session)
-  clearCurrValues(ctx.session.currValues)  
-  // ctx.session.steps = [];
-  // ctx.session.prevState = '';
-  // ctx.session.currBrigade = '';
-  // ctx.session.currName = '';
-  // ctx.session.currComment = '';
 })
 bot.hears("Бригады", ctx => {
   convers.chooseBrigade(ctx, brigadesList)
@@ -107,7 +100,7 @@ bot.hears("Записать результат", async ctx=>{
 			'Объект': ctx.session.currObject,
 			'Бригады': ctx.session.currBrigade ? ctx.session.currBrigade : '',
       'ФИО': `${ctx.message.from.last_name == undefined ? '': ctx.message.from.last_name} ${ctx.message.from.first_name == undefined ? '' : ctx.message.from.first_name}; ${ctx.message.from.username}`,
-      'Комментарий': ctx.session.currComment
+      'Комментарий': `${ctx.session.currComment == undefined ? '' : ctx.session.currComment}`
 
     }
     
