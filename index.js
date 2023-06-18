@@ -23,7 +23,8 @@ const {
   expenseList,
   peopleList,
   writeRes,
-  adminMenu
+  adminMenu,
+  currency
 } = require("./keyabords")
 const {
   Conversation
@@ -49,6 +50,7 @@ function initial() {
       getExpense: false,
       getName: false,
       writeRes:false,
+      getCurrence:false,
       stop: false
     },        
       steps: [],
@@ -94,6 +96,7 @@ bot.hears("Записать результат", async ctx=>{
     let currObj = {
       'Дата': `${getDate()}`,
 			'Сумма': ctx.session.currSum,
+      'Валюта': ctx.session.currence,
 			'Вид': `${viewFeeld(ctx)}`,
 			'Люди': ctx.session.currName ? ctx.session.currName : '',
 			'Титул': ctx.session.currExpense,
@@ -208,9 +211,10 @@ bot.hears(/[0-9]/, ctx => {
     ctx.reply(`Сегодня ${getDate()}
 Сумма: ${ctx.session.currSum}
 
-Выберете категорию:`, {
-      reply_markup: category
+Выберете валюту:`, {
+      reply_markup: currency
     })
+    stateToggle(ctx, "getCurrence")
   }
   if (ctx.session.state.getExpense){
     ctx.session.currExpense = data;
@@ -250,9 +254,13 @@ bot.on('message', ctx => {
     convers.getTotalRes(ctx, getDate, feeldToggle, writeRes)
     stateToggle(ctx, "writeRes")
   }else if (ctx.session.state.writeRes){
-
     ctx.session.currComment = data
     convers.getTotalRes(ctx, getDate, feeldToggle, writeRes)
+  }else if(ctx.session.state.getCurrence){
+    ctx.session.currence = data;
+    ctx.reply(`Выберете категорию:`, {
+      reply_markup: category
+    })
   }
 })
 

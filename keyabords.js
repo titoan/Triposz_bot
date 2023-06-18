@@ -135,6 +135,15 @@ const writeRes = new Keyboard()
 .row()
 .text("Стоп")
 
+const currency = new Keyboard()
+.text("PLN")
+.row()
+.text("EUR")
+.row()
+.text("Назад")
+.row()
+.text("Стоп")
+
 module.exports = {
     newNote,
     category,
@@ -143,5 +152,6 @@ module.exports = {
     expenseList,
     peopleList,
     writeRes,
-    adminMenu
+    adminMenu,
+    currency
 }

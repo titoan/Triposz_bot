@@ -40,12 +40,21 @@ class Conversation {
 		})
 	}
 
+	chooseCurrency(ctx, currency){
+		ctx.reply(`Выберете валюту`, {
+			reply_markup: ctx.reply(`Выберете расход`, {
+			reply_markup: currency
+		})
+		})
+	}
+
 	getTotalRes(ctx, getDate, feeldToggle, writeRes) {
 		ctx.reply(`Сегодня ${getDate()}
-Сумма: ${ctx.session.currSum} ${feeldToggle(ctx.session.currBrigade, ctx.session.currName)}
+Сумма: ${ctx.session.currSum}
+Валюта:${ctx.session.currence} ${feeldToggle(ctx.session.currBrigade, ctx.session.currName)}
 Объект: ${ctx.session.currObject}
 Расход: ${ctx.session.currExpense}
-щіш	${ctx.session.currComment ? `Комментарий: ${ctx.session.currComment}` : ''}
+${ctx.session.currComment ? `Комментарий: ${ctx.session.currComment}` : ''}
     `, {
 			reply_markup: writeRes
 		})
