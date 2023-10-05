@@ -95,16 +95,14 @@ bot.hears("Записать результат", async ctx=>{
 
     let currObj = {
       'Дата': `${getDate()}`,
-			'Сумма': ctx.session.currSum,
-      'Валюта': ctx.session.currence,
-			'Вид': `${viewFeeld(ctx)}`,
+      "PLN": ctx.session.currence === "PLN" ? ctx.session.currSum : "",
+      "EUR":ctx.session.currence === "EUR" ? ctx.session.currSum : "",      
 			'Люди': ctx.session.currName ? ctx.session.currName : '',
 			'Титул': ctx.session.currExpense,
 			'Объект': ctx.session.currObject,
 			'Бригады': ctx.session.currBrigade ? ctx.session.currBrigade : '',
       'ФИО': `${ctx.message.from.last_name == undefined ? '': ctx.message.from.last_name} ${ctx.message.from.first_name == undefined ? '' : ctx.message.from.first_name}; ${ctx.message.from.username}`,
-      'Комментарий': `${ctx.session.currComment == undefined ? '' : ctx.session.currComment}`
-
+      'Комментарий': `${ctx.session.currComment == undefined ? '' : ctx.session.currComment}`,
     }
     
     tableInfo.writeToTable(currObj);

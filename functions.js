@@ -76,42 +76,41 @@ async function isADmin(ctx, newNote, adminMenu, fs) {
 }
 
 async function sendMsgToAdmin(bot, ctx, currObj) {
-//     let arr = [288945494, 262506374,126981981]
+    let arr = [288945494, 262506374,126981981]
 
-//     arr.forEach(async item => {
-//         await bot.api.sendMessage(item, `Пользователь совершил запись:
+    arr.forEach(async item => {
+        await bot.api.sendMessage(item, `Пользователь совершил запись:
+
+        <b>${currObj['Дата']}</b>
+        Сумма: ${ctx.session.currSum}
+        Валюта: ${ctx.session.currence}
+        Люди: ${currObj['Люди']}
+        Титул: ${currObj['Титул']}
+        Объект: ${currObj['Объект']}
+        Бригады: ${currObj['Бригады']}
+        Комментарий: ${currObj['Комментарий']}
+        
+Имя: <b>${ctx.message.from.last_name == undefined ? '': ctx.message.from.last_name} ${ctx.message.from.first_name == undefined ? '' : ctx.message.from.first_name}</b>
+username: <b>${ctx.message.from.username}</b>`, {
+            parse_mode: "HTML"
+        });
+    })
+
+// await bot.api.sendMessage(192713235, `Пользователь совершил запись:
 
 // <b>${currObj['Дата']}</b>
-// Сумма: ${currObj['Сумма']}
-// Вид: ${currObj['Вид']}
+// Сумма: ${ctx.session.currSum}
+// Валюта: ${ctx.session.currence}
 // Люди: ${currObj['Люди']}
 // Титул: ${currObj['Титул']}
 // Объект: ${currObj['Объект']}
 // Бригады: ${currObj['Бригады']}
 // Комментарий: ${currObj['Комментарий']}
-        
+
 // Имя: <b>${ctx.message.from.last_name == undefined ? '': ctx.message.from.last_name} ${ctx.message.from.first_name == undefined ? '' : ctx.message.from.first_name}</b>
 // username: <b>${ctx.message.from.username}</b>`, {
 //             parse_mode: "HTML"
 //         });
-//     })
-
-await bot.api.sendMessage(192713235, `Пользователь совершил запись:
-
-<b>${currObj['Дата']}</b>
-Сумма: ${currObj['Сумма']}
-Валюта: ${currObj['Валюта']}
-Вид: ${currObj['Вид']}
-Люди: ${currObj['Люди']}
-Титул: ${currObj['Титул']}
-Объект: ${currObj['Объект']}
-Бригады: ${currObj['Бригады']}
-Комментарий: ${currObj['Комментарий']}
-
-Имя: <b>${ctx.message.from.last_name == undefined ? '': ctx.message.from.last_name} ${ctx.message.from.first_name == undefined ? '' : ctx.message.from.first_name}</b>
-username: <b>${ctx.message.from.username}</b>`, {
-            parse_mode: "HTML"
-        });
 }
 
 module.exports = {
